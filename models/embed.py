@@ -471,6 +471,8 @@ class DataEmbedding(nn.Module):
         x = self.rpe.forward(x) + self.rpe_fixed.forward(x) #+ self.temporal_embedding(x_mark) # self.position_embedding(x) #+ self.temporal_embedding(x_mark)
         #print(f'{x.size()}    RPE', flush=True)
         x = self.fixed_channel_embedding.forward(x) + self.learnable_channel_embedding.forward(x)
+
         
+        print(f'Running properly till this', flush=True)
         #x = self.value_embedding(x) + self.temporal_embedding(x_mark) + self.position_embedding(x) #+ self.temporal_embedding(x_mark)
         return self.dropout(x)
