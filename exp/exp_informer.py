@@ -154,7 +154,6 @@ class Exp_Informer(Exp_Basic):
                 model_optim.zero_grad()
                 pred, true = self._process_one_batch(
                     train_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
-                print(f'exp.train(): pred: {pred.size()}, true: {true.size()}', flush=True)
                 loss = criterion(pred, true)
                 train_loss.append(loss.item())
                 
@@ -282,7 +281,6 @@ class Exp_Informer(Exp_Basic):
                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
             else:
                 outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
-        print(f'Output shape before inverse transform: {outputs.size()}', flush=True)
         if self.args.inverse:
             outputs = dataset_object.inverse_transform(outputs)
         f_dim = -1 if self.args.features=='MS' else 0
