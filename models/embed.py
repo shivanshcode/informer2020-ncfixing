@@ -460,7 +460,7 @@ class DataEmbedding(nn.Module):
         self.dropout = nn.Dropout(p=dropout)
 
     def forward(self, x, x_mark):
-        print(f'Data Embedding Class: x shape: {x.size()}, x type {type(x)}', flush=True)
+        #print(f'Data Embedding Class: x shape: {x.size()}, x type {type(x)}', flush=True)
         x = self.value_embedding(x)
         #print(f'{x.size()}    Value Embedded', flush=True)
         x = self.rpe.forward(x) + self.rpe_fixed.forward(x) #+ self.temporal_embedding(x_mark) # self.position_embedding(x) #+ self.temporal_embedding(x_mark)
