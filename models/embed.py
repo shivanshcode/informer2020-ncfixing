@@ -462,7 +462,7 @@ class DataEmbedding(nn.Module):
     def forward(self, x, x_mark):
         #print(f'Data Embedding Class: x shape: {x.size()}, x type {type(x)}', flush=True)
         # Modification to x: [B, N, C*(M_eff +1)] -> [B, N*C, M_eff +1]
-        x = x.reshape(-1, int(tensor.shape[2]/7))
+        x = x.reshape(-1, int(x.shape[2]/7))
         x = self.value_embedding(x)
         #print(f'{x.size()}    Value Embedded', flush=True)
         x = self.rpe.forward(x) + self.rpe_fixed.forward(x) #+ self.temporal_embedding(x_mark) # self.position_embedding(x) #+ self.temporal_embedding(x_mark)
