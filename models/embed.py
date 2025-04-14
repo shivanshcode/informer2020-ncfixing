@@ -67,6 +67,7 @@ class RotaryPositionalEmbedding(nn.Module):
             Tensor of shape (batch, seq_len, d_model) after applying ROPE.
         """
         batch, seq_len, d_model = x.size()
+        print(f'RPE: {batch}    {seq_len}    {d_model}', flush=True)
         # Get fixed sin and cos embeddings for the current sequence length.
         # Original shape: (seq_len, d_model/2) -> expand to (1, seq_len, d_model/2)
         sin_embed = self.sin_embed[:seq_len, :].unsqueeze(0)
