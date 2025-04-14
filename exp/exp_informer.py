@@ -152,7 +152,6 @@ class Exp_Informer(Exp_Basic):
                 iter_count += 1
                 
                 model_optim.zero_grad()
-                print(f'Running fine till this', flush=True)
                 pred, true = self._process_one_batch(
                     train_data, batch_x, batch_y, batch_x_mark, batch_y_mark)
                 loss = criterion(pred, true)
@@ -267,9 +266,12 @@ class Exp_Informer(Exp_Basic):
         # decoder input
         if self.args.padding==0:
             dec_inp = torch.zeros([batch_y.shape[0], self.args.pred_len, batch_y.shape[-1]]).float()
+            print(f'Decoder Input Shape 1: {dec_inp.shape}', flush=True)
         elif self.args.padding==1:
             dec_inp = torch.ones([batch_y.shape[0], self.args.pred_len, batch_y.shape[-1]]).float()
+            print(f'Decoder Input Shape 2: {dec_inp.shape}', flush=True)
         dec_inp = torch.cat([batch_y[:,:self.args.label_len,:], dec_inp], dim=1).float().to(self.device)
+        print(f'Decoder Input Shape 3: {dec_inp.shape}', flush=True)
         # encoder - decoder
         if self.args.use_amp:
             with torch.cuda.amp.autocast():
@@ -286,5 +288,5 @@ class Exp_Informer(Exp_Basic):
             outputs = dataset_object.inverse_transform(outputs)
         f_dim = -1 if self.args.features=='MS' else 0
         batch_y = batch_y[:,-self.args.pred_len:,f_dim:].to(self.device)
-
+        print(f'Output shape: {outputs.shape}', flush=True)
         return outputs, batch_y
