@@ -67,7 +67,6 @@ class RotaryPositionalEmbedding(nn.Module):
             Tensor of shape (batch, seq_len, d_model) after applying ROPE.
         """
         batch, seq_len, d_model = x.size()
-        print(f'RPE: {batch}    {seq_len}    {d_model}', flush=True)
         # Get fixed sin and cos embeddings for the current sequence length.
         # Original shape: (seq_len, d_model/2) -> expand to (1, seq_len, d_model/2)
         sin_embed = self.sin_embed[:seq_len, :].unsqueeze(0)
@@ -447,7 +446,6 @@ class TimeFeatureEmbedding(nn.Module):
 class DataEmbedding(nn.Module):
     def __init__(self, c_in, d_model, embed_type='fixed', freq='h', dropout=0.1):
         super(DataEmbedding, self).__init__()
-        print(f'cin in DataEmbedding: {c_in}', flush =True)
         self.value_embedding = TokenEmbedding(c_in=c_in, d_model=d_model)
         self.position_embedding = PositionalEmbedding(d_model=d_model)
         self.temporal_embedding = TemporalEmbedding(d_model=d_model, embed_type=embed_type, freq=freq) if embed_type!='timeF' else TimeFeatureEmbedding(d_model=d_model, embed_type=embed_type, freq=freq)
@@ -473,6 +471,5 @@ class DataEmbedding(nn.Module):
         x = self.fixed_channel_embedding.forward(x) + self.learnable_channel_embedding.forward(x)
 
         
-        print(f'Running properly till this', flush=True)
         #x = self.value_embedding(x) + self.temporal_embedding(x_mark) + self.position_embedding(x) #+ self.temporal_embedding(x_mark)
         return self.dropout(x)
