@@ -69,13 +69,18 @@ class RotaryPositionalEmbedding(nn.Module):
         batch, seq_len, d_model = x.size()
         # Get fixed sin and cos embeddings for the current sequence length.
         # Original shape: (seq_len, d_model/2) -> expand to (1, seq_len, d_model/2)
-        sin_embed = self.sin_embed[:seq_len, :].unsqueeze(0)
-        cos_embed = self.cos_embed[:seq_len, :].unsqueeze(0)
+        sin_embed = self.sin_embed[:int(seq_len/7), :].unsqueeze(0)
+        cos_embed = self.cos_embed[:int(seq_len/7), :].unsqueeze(0)
         # Instead of doing separate 2D operations, we simply expand them to full d_model.
         # This creates tensors of shape (1, seq_len, d_model) where the embedding for each
         # dimension pair is repeated.
         sin_embed = torch.repeat_interleave(sin_embed, repeats=2, dim=-1)
         cos_embed = torch.repeat_interleave(cos_embed, repeats=2, dim=-1)
+
+
+        sin_embed = torch.repeat_interleave(sin_embed, repeats=7, dim=1)
+        cos_embed = torch.repeat_interleave(cos_embed, repeats=7, dim=1)
+        
         # Apply the rotary transformation with pointwise multiplication.
         return x * cos_embed + self.rotate_half(x) * sin_embed
 
@@ -145,13 +150,17 @@ class RotaryPositionalEmbeddingFixed(nn.Module):
         batch, seq_len, d_model = x.size()
         # Get fixed sin and cos embeddings for the current sequence length.
         # Original shape: (seq_len, d_model/2) -> expand to (1, seq_len, d_model/2)
-        sin_embed = self.sin_embed[:seq_len, :].unsqueeze(0)
-        cos_embed = self.cos_embed[:seq_len, :].unsqueeze(0)
+        sin_embed = self.sin_embed[:int(seq_len/7), :].unsqueeze(0)
+        cos_embed = self.cos_embed[:int(seq_len/7), :].unsqueeze(0)
         # Instead of doing separate 2D operations, we simply expand them to full d_model.
         # This creates tensors of shape (1, seq_len, d_model) where the embedding for each
         # dimension pair is repeated.
         sin_embed = torch.repeat_interleave(sin_embed, repeats=2, dim=-1)
         cos_embed = torch.repeat_interleave(cos_embed, repeats=2, dim=-1)
+        
+        sin_embed = torch.repeat_interleave(sin_embed, repeats=7, dim=1)
+        cos_embed = torch.repeat_interleave(cos_embed, repeats=7, dim=1)
+        
         # Apply the rotary transformation with pointwise multiplication.
         return x * cos_embed + self.rotate_half(x) * sin_embed
 
