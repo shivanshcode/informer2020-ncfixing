@@ -68,22 +68,20 @@ class Informer(nn.Module):
                 enc_self_mask=None, dec_self_mask=None, dec_enc_mask=None):
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
         enc_out, attns = self.encoder(enc_out, attn_mask=enc_self_mask)
-        print(f'Encoder Output: {enc_out.size()}', flush=True)
-
+        
         dec_out = self.dec_embedding(x_dec, x_mark_dec)
         dec_out = self.decoder(dec_out, enc_out, x_mask=dec_self_mask, cross_mask=dec_enc_mask)
         dec_out = self.projection(dec_out)
-        print(f'Decoder Output: {dec_out.size()}', flush=True)
-
+        
         #print(f'Decoder Output Shape from model.py/Informer: {dec_out.shape}', flush=True)
         # dec_out = self.end_conv1(dec_out)
         # dec_out = self.end_conv2(dec_out.transpose(2,1)).transpose(1,2)
         if self.output_attention:
-            print(f'Final Decoder Output: {dec_out[:,-self.pred_len*7:,:].size()}', flush=True)
+            # Changed the shape of output
             dec_out_temp = dec_out[:,-self.pred_len*7:,:] 
             return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7), attns
         else:
-            print(f'Final Decoder Output: {dec_out[:,-self.pred_len*7:,:].size()}', flush=True)
+            # Changed the shape of output
             dec_out_temp = dec_out[:,-self.pred_len*7:,:]
             return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7) # [B, L, D]
 
@@ -160,6 +158,11 @@ class InformerStack(nn.Module):
         # dec_out = self.end_conv1(dec_out)
         # dec_out = self.end_conv2(dec_out.transpose(2,1)).transpose(1,2)
         if self.output_attention:
-            return dec_out[:,-self.pred_len:,:], attns
+            #return dec_out[:,-self.pred_len:,:], attns
+            dec_out_temp = dec_out[:,-self.pred_len*7:,:] 
+            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7), attns
         else:
-            return dec_out[:,-self.pred_len:,:] # [B, L, D]
+            #return dec_out[:,-self.pred_len:,:] # [B, L, D]
+            dec_out_temp = dec_out[:,-self.pred_len*7:,:]
+            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7) # [B, L, D]
+
