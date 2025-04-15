@@ -79,12 +79,13 @@ class Informer(nn.Module):
         if self.output_attention:
             # Changed the shape of output
             dec_out_temp = dec_out[:,-self.pred_len*7:,:] 
-            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7), attns
+            [dec_B, dec_N, dec_C] = dec_out_temp.size()
+            return dec_out_temp.reshape(dec_B, -1, dec_C*7), attns
         else:
             # Changed the shape of output
             dec_out_temp = dec_out[:,-self.pred_len*7:,:]
-            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7) # [B, L, D]
-
+            [dec_B, dec_N, dec_C] = dec_out_temp.size()
+            return dec_out_temp.reshape(dec_B, -1, dec_C*7)
 
 class InformerStack(nn.Module):
     def __init__(self, enc_in, dec_in, c_out, seq_len, label_len, out_len, 
@@ -159,10 +160,12 @@ class InformerStack(nn.Module):
         # dec_out = self.end_conv2(dec_out.transpose(2,1)).transpose(1,2)
         if self.output_attention:
             #return dec_out[:,-self.pred_len:,:], attns
-            dec_out_temp = dec_out[:,-self.pred_len*7:,:] 
-            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7), attns
+            dec_out_temp = dec_out[:,-self.pred_len*7:,:]
+            [dec_B, dec_N, dec_C] = dec_out_temp.size()
+            return dec_out_temp.reshape(dec_B, -1, dec_C*7), attns
         else:
             #return dec_out[:,-self.pred_len:,:] # [B, L, D]
             dec_out_temp = dec_out[:,-self.pred_len*7:,:]
-            return dec_out_temp.reshape(dec_out_temp.size()[0], -1, dec_out_temp.size()[2]*7) # [B, L, D]
+            [dec_B, dec_N, dec_C] = dec_out_temp.size()
+            return dec_out_temp.reshape(dec_B, -1, dec_C*7)
 
