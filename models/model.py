@@ -73,7 +73,7 @@ class Informer(nn.Module):
         dec_out = self.dec_embedding(x_dec, x_mark_dec)
         dec_out = self.decoder(dec_out, enc_out, x_mask=dec_self_mask, cross_mask=dec_enc_mask)
         dec_out = self.projection(dec_out)
-        print(f'Decoder Output: {enc_out.size()}', flush=True)
+        print(f'Decoder Output: {dec_out.size()}', flush=True)
 
         #print(f'Decoder Output Shape from model.py/Informer: {dec_out.shape}', flush=True)
         # dec_out = self.end_conv1(dec_out)
