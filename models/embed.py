@@ -462,7 +462,7 @@ class DataEmbedding(nn.Module):
         #print(f'Data Embedding Class: x shape: {x.size()}, x type {type(x)}', flush=True)
         # Modification to x: [B, N, C*(M_eff +1)] -> [B, N*C, M_eff +1]
         x = x.reshape(x.shape[0], -1, int(x.shape[2]/7))
-        print(f'shape of x: {x.shape}', flush=True)
+        #print(f'shape of x: {x.shape}', flush=True)
         
         x = self.value_embedding(x)
         #print(f'{x.size()}    Value Embedded', flush=True)
